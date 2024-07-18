@@ -47,10 +47,10 @@ const RegisterPage: React.FC = () => {
                 console.log('User Email:', user.email);
                 const {data,  error} = await supabase.from('users').select().eq('email', user.email).single();
 
-                if (error) {
-                    console.error('Error fetching user:', error.message);
-                    router.replace('/login');
-                }
+                // if (error) {
+                //     console.error('Error fetching user in Sign Up Page:', error.message);
+                //     router.replace('/login');
+                // }
 
                 if (data) {
                     if (data.role === 'Client') {
@@ -60,6 +60,8 @@ const RegisterPage: React.FC = () => {
                       } else if (data.role === 'Designer') {
                         router.replace('/designer');
                       }
+                } else {
+                    console.log('No user data found');
                 }
             }
         };

@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useUser } from '@/context/UserContext/userContext';
 import { registerUserInformation, sendProject } from '@/actions';
 import { useFormState } from 'react-dom';
+import Image from "next/image";
 import SubmitButton from '@/components/submit-button-project';
 import {
     DropdownMenu,
@@ -51,12 +52,14 @@ import {
   } from "@/components/ui/select"
 import { set } from 'zod';
 import { get } from 'http';
+import { Textarea } from "@/components/ui/textarea"
 
 interface Project {
     id: number;
     title: string;
     description: string;
     state: string;
+    images: string[];
     // Add other properties specific to your project data
   }
 
@@ -124,9 +127,16 @@ export default function UserType() {
                 </Button>
             </div>
             <main className="flex flex-col items-center justify-center min-h-screen bg-cyan-200 pt-16">
-                <img src="/GrayolaIcon.svg" alt="GrayolaIcon" className="w-40 h-40" />
+                {/* <img src="/GrayolaIcon.svg" alt="GrayolaIcon" className="w-40 h-40" /> */}
+                {!showCreateForm && !showProjects && (
+                    <div className="flex flex-col items-center justify-center">
+                        <img src="/GrayolaIcon.svg" alt="GrayolaIcon" className="w-40 h-40" />
+                        <span className="text-4xl font-bold">Welcome</span>
+                    </div>
+                )
+                }
                 {showCreateForm && (
-                    <div className="mx-auto w-full h-full p-12 rounded-lg border-2 border-gray-500 border-opacity-10 shadow-lg bg-slate-100">
+                    <div className="mx-auto w-[70%] h-full p-12 rounded-lg border-2 border-gray-500 border-opacity-10 shadow-lg bg-slate-100">
                         <form action={formAction} >
                             <div className="grid w-full items-center gap-1.5 mb-4">
                                 <Label htmlFor="title">Title</Label>
@@ -146,7 +156,7 @@ export default function UserType() {
                             </div>
                             <div className="grid w-full items-center gap-1.5 mb-4">
                                 <Label htmlFor="description">Description</Label>
-                                <Input 
+                                {/* <Input 
                                     type="text" 
                                     id="description" 
                                     name="description"
@@ -154,6 +164,14 @@ export default function UserType() {
                                     value={description}
                                     className="h-24"
                                     onChange={(e) => setDescription(e.target.value)}
+                                    /> */}
+                                    <Textarea
+                                        id="description"
+                                        name="description"
+                                        placeholder="Description"
+                                        value={description}
+                                        className="h-24 w-full border rounded-lg p-2"
+                                        onChange={(e) => setDescription(e.target.value)}
                                     />
                                 {state?.errors?.description && (
                                 <span id="name-error" className="text-red-600 text-sm">
@@ -187,23 +205,60 @@ export default function UserType() {
                     </div>
                 )}
                 {showProjects && (
-                    <div className="mx-auto w-full h-full p-12 rounded-lg border-2 border-gray-500 border-opacity-10 shadow-lg bg-slate-100">
+                    <div className="mx-10 flex flex-wrap gap-2">
                         {loading ? (
                             <div className="flex items-center justify-center h-full">
                                 <span>Loading...</span>
                             </div>
                         ) : (
                             projects && projects.map((project: Project) => (
-                                <Card key={project.id} className="w-[350px] mb-4">
+                                <Card key={project.id} className="w-[calc(33.33%-8px)] mb-4">
                                     <CardHeader>
                                         <CardTitle>{project.title}</CardTitle>
                                         <CardDescription>{project.description}</CardDescription>
                                     </CardHeader>
                                     <CardContent>
-                                        {/* Aquí puedes agregar más detalles si es necesario */}
+                                    {project.images && project.images[0] ? (
+                                        <div className="relative h-96 bg-center">
+                                            <Image
+                                                src={
+                                                    project.images[0].startsWith('https') 
+                                                    ? project.images[0] 
+                                                    : `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/storage/${project.images[0]}`
+                                                }
+                                                alt={project.title}
+                                                fill={true}
+                                                className="rounded-t"
+                                                sizes="100vw"
+                                                style={{
+                                                    objectFit: 'cover',
+                                                }}
+                                            />
+                                        </div>
+                                    ) : <div className="flex flex-col items-center justify-center h-96">
+                                            <span className="mb-2">No image</span>
+                                            <img src="/GrayolaIcon.svg" alt="GrayolaIcon" className="h-full w-full" />
+                                        </div>
+                                        }
+                                    {/* <div className="relative h-96 bg-center ">
+                                        <Image
+                                            src={
+                                                // project.images[0]
+                                                
+                                                project.images[0].startsWith('https') ? project.images[0]: `${process.env.SUPABASE_URL}/storage/v1/object/public/storage/${project.images[0]}`
+                                            }
+                                            alt={title}
+                                            fill={true}
+                                            className="rounded-t"
+                                            sizes="100vw"
+                                            style={{
+                                            objectFit: 'cover',
+                                            }}
+                                        />
+                                    </div> */}
                                     </CardContent>
                                     <CardFooter className="flex justify-center">
-                                        <Button variant="outline">State: {project.state}</Button>
+                                        <Button variant="outline" className="cursor-default hover:bg-white">Status: {project.state}</Button>
                                     </CardFooter>
                                 </Card>
                             ))

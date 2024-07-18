@@ -12,7 +12,7 @@ export default function LoginPage() {
   useEffect(() => {
     if (user) {
       // router.push('/user-type');
-      router.push('/loading-register');
+      router.push('/loading');
     }
     
   }, [user, router]);

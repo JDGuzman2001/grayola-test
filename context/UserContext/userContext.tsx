@@ -76,7 +76,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
           access_type: "offline",
           prompt: "consent",
         },
-        redirectTo: `${location.origin}/loading-register`,
+        redirectTo: `${location.origin}/loading`,
       },
     });
 

@@ -35,7 +35,7 @@ export default function LoadingRegisterPage() {
                 const {data,  error} = await supabase.from('users').select().eq('email', user.email).single();
 
                 if (error) {
-                    console.error('Error fetching user:', error.message);
+                    console.error('Error fetching user in Loading:', error.message);
                     setRoute('/signup');
                 }
 
