@@ -1,8 +1,8 @@
 "use client";
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { useUser } from "@/context/UserContext/userContext"; // Ajusta la ruta si es necesario
-import DesignerClient from "@/components/designerclient";
+import { useUser } from "@/context/UserContext/userContext";
+import DesignerClient from "@/components/designer/designerClient";
 import { createClient } from "@/supabase/client";
 import { useRouter } from "next/navigation";
 
@@ -19,7 +19,6 @@ export default function Designer() {
                 const { data, error } = await supabase.from('users').select().eq('email', user.email).single();
                 
                 if (error) {
-                    // console.error('Error fetching user:', error.message);
                     router.replace('/login');
                     return;
                 }
@@ -28,15 +27,12 @@ export default function Designer() {
                     if (data.role === 'Project Manager') {
                         router.replace('/project-manager');
                     } else if (data.role === 'Client') {
-                        router.replace('/client');// Stop loading if Clien
+                        router.replace('/client');
                     } else if (data.role === 'Designer') {
                         setLoadingPage(false);
                     }
-                } else {
-                    // console.log('No user data found');
-                }
+                } 
             } catch (error) {
-                // console.error('Error during user check:', error.message);
                 router.replace('/login');
             }
         }
@@ -66,7 +62,7 @@ export default function Designer() {
 
           setDesignerProjects(projectsData || []);
         } catch (error) {
-          // console.error('Error fetching data:', error);
+          console.error(error);
         }
       };
 

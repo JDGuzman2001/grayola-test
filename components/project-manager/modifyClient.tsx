@@ -3,9 +3,9 @@
 import React, { useState } from 'react';
 import { Pencil1Icon, ChevronLeftIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
-import UpdateInfo from "@/components/updateinfo";
+import UpdateInfo from "@/components/project-manager/updateInfo";
 import Link from 'next/link';
-import LogoutButton from "@/components/logoutbutton";
+import LogoutButton from "@/components/logoutButton";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from 'next/image';
 import { deleteProject } from '@/actions/index';
@@ -19,8 +19,6 @@ import {
     DialogTitle,
     DialogTrigger,
   } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useUser } from '@/context/UserContext/userContext';
 import { createClient } from "@/supabase/client";
 
@@ -37,33 +35,29 @@ type ModifyClientProps = {
 
 const ModifyClient: React.FC<ModifyClientProps> = ({ data }) => {
     const [isFormVisible, setFormVisible] = useState(false);
-    const [deleteStatus, setDeleteStatus] = useState<string | null>(null); // Para manejar el estado de la eliminación
+    const [deleteStatus, setDeleteStatus] = useState<string | null>(null); 
     const router = useRouter();
     const handleEditClick = () => {
         setFormVisible(!isFormVisible);
     };
-    const { user, setUser, allProjects, getAllProjects } = useUser();
+    const { user } = useUser();
     const supabase = createClient();
-    const [loading, setLoading] = useState(true);  // Start with loading true
+    const [loading, setLoading] = useState(true);  
 
     React.useEffect(() => {
         const checkUser = async () => {
             if (user) {
-                // console.log('User:', user);
-                // console.log('User Email:', user.email);
                 const {data,  error} = await supabase.from('users').select().eq('email', user.email).single();
   
                 if (data) {
                     if (data.role === 'Project Manager') {
-                        setLoading(false); // Stop loading if Project Manager
+                        setLoading(false); 
                     } else if (data.role === 'Client') {
                         router.replace('/client');
                     } else if (data.role === 'Designer') {
                         router.replace('/designer');
                     }
-                } else {
-                    // console.log('No user data found');
-                }
+                } 
             }
         };
   
@@ -76,8 +70,6 @@ const ModifyClient: React.FC<ModifyClientProps> = ({ data }) => {
 
         if (result.type === "success") {
             setDeleteStatus('Project deleted successfully');
-            // Redirigir o realizar otras acciones necesarias
-            // Por ejemplo: redirigir a la página de proyectos
             router.replace('/project-manager');
         } else {
             setDeleteStatus(result.message);
@@ -121,7 +113,6 @@ const ModifyClient: React.FC<ModifyClientProps> = ({ data }) => {
                         <CardTitle>{data.id}</CardTitle>
                         <div className="flex">
                             <Pencil1Icon onClick={handleEditClick} className="h-6 w-6 ml-2 cursor-pointer" />
-                            {/* <TrashIcon className="h-6 w-6 ml-2 cursor-pointer text-red-400" /> */}
                             <Dialog>
                                 <DialogTrigger asChild>
                                     <TrashIcon className="h-6 w-6 ml-2 cursor-pointer text-red-400" />

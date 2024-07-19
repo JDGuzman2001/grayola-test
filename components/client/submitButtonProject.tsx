@@ -1,5 +1,5 @@
 import { useFormStatus } from 'react-dom';
-import { Button } from './ui/button';
+import { Button } from '@/components/ui/button';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -10,7 +10,7 @@ function SubmitButton() {
       className="w-full p-3 bg-green-400 text-black hover:bg-fuchsia-400 border border-black mt-2"
       aria-disabled={pending}
     >
-      {pending ? 'Loading...' : 'Update Project'}
+      {pending ? 'Loading...' : 'Send Project'}
     </Button>
   );
 }

@@ -2,11 +2,11 @@
 
 import React from 'react';
 import { useUser } from "@/context/UserContext/userContext";
-import ProjectSelect from "@/components/selectproject";
-import DesignerSelect from "@/components/selectdesigner";
+import ProjectSelect from "@/components/project-manager/selectProject";
+import DesignerSelect from "@/components/project-manager/selectDesigner";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/supabase/client";
-import LogoutButton from "@/components/logoutbutton";
+import LogoutButton from "@/components/logoutButton";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -15,36 +15,27 @@ const AssignClient: React.FC<{ designers: any[], projects: any[] }> = ({ designe
   const { designerProjects, assignedProjects, setDesignerProjects, setAssignedProjects } = useUser();
   const router = useRouter(); 
 
-//   const handleAssign = () => {
-//     console.log('Selected Designer:', designerProjects);
-//     console.log('Selected Project:', assignedProjects);
-//   };
-    const handleAssign = async () => {
-        if (!assignedProjects || !designerProjects) {
-        // console.error('No project or designer selected');
-        return;
-        }
+  const handleAssign = async () => {
+      if (!assignedProjects || !designerProjects) {
+      return;
+      }
 
-        const supabase = createClient();
+      const supabase = createClient();
 
-        const { id: projectId } = assignedProjects;
-        const { id: designerId } = designerProjects;
+      const { id: projectId } = assignedProjects;
+      const { id: designerId } = designerProjects;
 
-        // console.log('Project ID:', projectId);
-        // console.log('Designer ID:', designerId);
+      const { error } = await supabase
+      .from('projects')
+      .update({ state: 'Assigned', designer: designerId })
+      .eq('id', projectId);
 
-        const { error } = await supabase
-        .from('projects')
-        .update({ state: 'Assigned', designer: designerId })
-        .eq('id', projectId);
-
-        if (error) {
-        // console.error('Error updating project:', error.message);
-        } else {
-        // console.log('Project updated successfully');
-        router.replace('/project-manager');
-        }
-    };
+      if (error) {
+        console.error('Error updating project:', error.message);
+      } else {
+        router.push('/project-manager');
+      }
+  };
 
   return (
     <main className="bg-cyan-200">

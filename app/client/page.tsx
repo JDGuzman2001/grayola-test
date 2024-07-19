@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 import { createClient } from "@/supabase/client";
 import { useRouter } from "next/navigation";
 import { useUser } from '@/context/UserContext/userContext';
-import { registerUserInformation, sendProject } from '@/actions';
+import { sendProject } from '@/actions';
 import { useFormState } from 'react-dom';
 import Image from "next/image";
-import SubmitButton from '@/components/submit-button-project';
+import SubmitButton from '@/components/client/submitButtonProject';
 import {
     Menubar,
     MenubarMenu,
@@ -32,7 +32,6 @@ interface Project {
     description: string;
     state: string;
     images: string[];
-    // Add other properties specific to your project data
 }
 
 const initialState = {
@@ -61,7 +60,6 @@ export default function UserType() {
                     const { data, error } = await supabase.from('users').select().eq('email', user.email).single();
                     
                     if (error) {
-                        // console.error('Error fetching user:', error.message);
                         router.replace('/login');
                         return;
                     }
@@ -70,15 +68,12 @@ export default function UserType() {
                         if (data.role === 'Project Manager') {
                             router.replace('/project-manager');
                         } else if (data.role === 'Client') {
-                            setLoadingPage(false); // Stop loading if Clien
+                            setLoadingPage(false); 
                         } else if (data.role === 'Designer') {
                             router.replace('/designer');
                         }
-                    } else {
-                        // console.log('No user data found');
-                    }
+                    } 
                 } catch (error) {
-                    // console.error('Error during user check:', error.message);
                     router.replace('/login');
                 }
             }
@@ -125,8 +120,6 @@ export default function UserType() {
         );
     }
 
-
-
     return (
         <div>
             <div className="fixed top-0 left-0 w-full z-50 bg-white shadow-md flex justify-between items-center px-4 py-2">
@@ -144,7 +137,6 @@ export default function UserType() {
                 </Button>
             </div>
             <main className="flex flex-col items-center justify-center min-h-screen bg-cyan-200 pt-16">
-                {/* <img src="/GrayolaIcon.svg" alt="GrayolaIcon" className="w-40 h-40" /> */}
                 {!showCreateForm && !showProjects && (
                     <div className="flex flex-col items-center justify-center">
                         <img src="/GrayolaIcon.svg" alt="GrayolaIcon" className="w-40 h-40" />

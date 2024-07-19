@@ -30,7 +30,7 @@ interface ProjectProps {
   email: string;
 }
 
-const MAX_DESCRIPTION_LENGTH = 150; // Ajusta según tus necesidades
+const MAX_DESCRIPTION_LENGTH = 150;
 
 const truncateDescription = (description: string) => {
   if (description.length <= MAX_DESCRIPTION_LENGTH) {
@@ -40,26 +40,29 @@ const truncateDescription = (description: string) => {
 };
 
 const ProjectSelect: React.FC<{ projects?: ProjectProps[] }> = ({ projects = [] }) => {
-  const { assignedProjects,  setAssignedProjects } = useUser();
+  const { assignedProjects,  setAssignedProjects, getUnassignedProjects, unassignedProjects } = useUser();
   
   const [selectedProject, setSelectedProject] = React.useState<ProjectProps | null>(null);
 
   const handleSelectChange = (value: string) => {
     const project = projects.find(p => p.id.toString() === value);
     setSelectedProject(project || null);
-    setAssignedProjects(project || null); // Actualiza assignedProjects en el contexto
+    setAssignedProjects(project || null);
   };
+
+  const handleViewUnassignedProjects = async () => {
+    await getUnassignedProjects();
+  }
 
   return (
     <div className="flex flex-col items-center">
       <div className="mb-6 mt-10">
-        <Select onValueChange={handleSelectChange} >
+        <Select onValueChange={handleSelectChange} onOpenChange={handleViewUnassignedProjects} >
             <SelectTrigger className="w-full">
             <SelectValue placeholder="Select an unassigned project" />
             </SelectTrigger>
             <SelectContent>
             <SelectGroup>
-                {/* <SelectLabel>Projects</SelectLabel> */}
                 {projects.map(project => (
                 <SelectItem key={project.id} value={project.id.toString()}>{project.title}</SelectItem>
                 ))}

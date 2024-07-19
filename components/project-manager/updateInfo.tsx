@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { useFormState } from 'react-dom';
 import {  updateProject } from '@/actions';
 import { useState } from 'react';
-import SubmitButton from "@/components/submit-button-update"
+import SubmitButton from "@/components/project-manager/submitButtonUpdate";
 
 const initialState = {
     message: '',

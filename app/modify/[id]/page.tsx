@@ -1,8 +1,8 @@
 import { createClient } from "@/supabase/client";
-import ModifyClient from "@/components/modifyclient";
+import ModifyClient from "@/components/project-manager/modifyClient";
 
 type Props = {
-  params: { slug: string };
+  params: { id: string };
 };
 
 export async function generateStaticParams() {
@@ -18,7 +18,7 @@ export async function generateStaticParams() {
     }
 
     return products.map(({ id }) => ({
-        slug: id.toString(),
+        id: id.toString(),
     }));
 }
 
@@ -27,7 +27,7 @@ export default async function Modify({ params }: Props) {
     const { data } = await supabase
         .from('projects')
         .select()
-        .match({ id: params.slug })
+        .match({ id: params.id })
         .single();
 
     if (!data) {

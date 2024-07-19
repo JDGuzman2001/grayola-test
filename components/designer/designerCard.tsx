@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button";
 
-
 interface ProjectProps {
     id: number;
     title: string;
@@ -21,14 +20,14 @@ interface ProjectProps {
     email: string;
   }
 
-  const MAX_DESCRIPTION_LENGTH = 150; // Ajusta según tus necesidades
+const MAX_DESCRIPTION_LENGTH = 150;
 
-  const truncateDescription = (description: string) => {
+const truncateDescription = (description: string) => {
       if (description.length <= MAX_DESCRIPTION_LENGTH) {
           return description;
       }
       return description.slice(0, MAX_DESCRIPTION_LENGTH) + '...';
-  };
+};
 
 const ProjectCard: React.FC<ProjectProps> = ({
     id,
@@ -39,7 +38,7 @@ const ProjectCard: React.FC<ProjectProps> = ({
     email,
   }) => {
     return (
-      <Link href={`/designer/projects/${id}`}>
+        <Link href={`/designer/projects/${id}`}>
         <Card key={id} className="w-[300px] h-[600px] mb-10">
             <CardHeader>
                 <CardTitle>{id}</CardTitle>
@@ -75,9 +74,8 @@ const ProjectCard: React.FC<ProjectProps> = ({
                 </div>
             </CardFooter>
         </Card>
-      </Link>
+        </Link>
     );
-  };
+};
   
-
 export default ProjectCard;
