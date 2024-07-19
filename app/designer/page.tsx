@@ -19,7 +19,7 @@ export default function Designer() {
                 const { data, error } = await supabase.from('users').select().eq('email', user.email).single();
                 
                 if (error) {
-                    console.error('Error fetching user:', error.message);
+                    // console.error('Error fetching user:', error.message);
                     router.replace('/login');
                     return;
                 }
@@ -33,7 +33,7 @@ export default function Designer() {
                         setLoadingPage(false);
                     }
                 } else {
-                    console.log('No user data found');
+                    // console.log('No user data found');
                 }
             } catch (error) {
                 // console.error('Error during user check:', error.message);
@@ -66,7 +66,7 @@ export default function Designer() {
 
           setDesignerProjects(projectsData || []);
         } catch (error) {
-          console.error('Error fetching data:', error);
+          // console.error('Error fetching data:', error);
         }
       };
 
