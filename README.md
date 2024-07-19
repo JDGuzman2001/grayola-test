@@ -130,7 +130,13 @@ yarn dev
 ├── types/
 │   └── project/
 │   │   └── index.ts
+├── .eslintrc.json
 ├── .gitignore
+├── README.md
+├── components.json
+├── next.config.mjs
 ├── package.json
-└── README.md
+├── postcss.config.mjs
+├── tailwind,config.ts
+└── tsconfig.json
 ```
