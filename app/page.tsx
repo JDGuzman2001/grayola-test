@@ -2,11 +2,6 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
 
-const initialState = {
-  message: '',
-  errors: null,
-};
-
 export default function Home() {
   return (    
     <main className="flex flex-col items-center justify-center min-h-screen bg-cyan-200">
@@ -15,7 +10,7 @@ export default function Home() {
       </div>
       <div>
         <Link href="/login">
-          <Button variant="secondary">Log In</Button>
+          <Button variant="secondary">Continue</Button>
         </Link>
         
       </div>

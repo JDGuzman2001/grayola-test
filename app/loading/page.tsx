@@ -70,7 +70,7 @@ export default function LoadingRegisterPage() {
           onClick={redirectToDashboard} 
           className=" p-3 bg-green-400 text-black hover:bg-fuchsia-400 border border-black mt-2"
         >
-          Continuar
+          Continue
         </Button>
       )}
     </div>
