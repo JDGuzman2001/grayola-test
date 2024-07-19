@@ -1,5 +1,5 @@
 "use client";
-
+import * as React from "react";
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/supabase/client";
@@ -48,10 +48,44 @@ export default function UserType() {
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [showProjects, setShowProjects] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [loadingPage, setLoadingPage] = useState(false);
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [email, setEmail] = useState("");
+
+    React.useEffect(() => {
+        const checkUser = async () => {
+            if (user) {
+                try {
+                    const { data, error } = await supabase.from('users').select().eq('email', user.email).single();
+                    
+                    if (error) {
+                        console.error('Error fetching user:', error.message);
+                        router.replace('/login');
+                        return;
+                    }
+                    
+                    if (data) {
+                        if (data.role === 'Project Manager') {
+                            router.replace('/project-manager');
+                        } else if (data.role === 'Client') {
+                            setLoadingPage(false); // Stop loading if Clien
+                        } else if (data.role === 'Designer') {
+                            router.replace('/designer');
+                        }
+                    } else {
+                        console.log('No user data found');
+                    }
+                } catch (error) {
+                    // console.error('Error during user check:', error.message);
+                    router.replace('/login');
+                }
+            }
+        };
+
+        checkUser();
+    }, [user, router, supabase]);
 
 
     const [state, formAction] = useFormState<any>(
@@ -81,6 +115,15 @@ export default function UserType() {
         await getProjects();
         setLoading(false);
     };
+
+    if (loadingPage) {
+        return (
+            <div className="flex flex-col items-center justify-center h-screen">
+                <img src="/GrayolaIcon.svg" alt="GrayolaIcon" className="w-40 h-40" />
+                <span>Loading...</span>
+            </div>
+        );
+    }
 
 
 
@@ -131,15 +174,6 @@ export default function UserType() {
                             </div>
                             <div className="grid w-full items-center gap-1.5 mb-4">
                                 <Label htmlFor="description">Description</Label>
-                                {/* <Input 
-                                    type="text" 
-                                    id="description" 
-                                    name="description"
-                                    placeholder="Description"
-                                    value={description}
-                                    className="h-24"
-                                    onChange={(e) => setDescription(e.target.value)}
-                                    /> */}
                                     <Textarea
                                         id="description"
                                         name="description"

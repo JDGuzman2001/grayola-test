@@ -167,7 +167,7 @@ const RegisterPage: React.FC = () => {
                     )}
                 </div>
                 <div className="mb-2">
-                    <Label htmlFor="role">What is your role?</Label>
+                    <Label htmlFor="role">What is your role? (Press the button to see more options)</Label>
                 </div>
                 <div className="mb-10" >
                     <DropdownMenu>

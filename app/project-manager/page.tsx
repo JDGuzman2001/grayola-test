@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/supabase/client";
@@ -9,8 +10,9 @@ import {
     Menubar,
     MenubarMenu,
     MenubarTrigger,
-  } from "@/components/ui/menubar"
+} from "@/components/ui/menubar";
 import ProjectCard from "@/components/project-card";
+import Link from 'next/link';
 
 interface Project {
     id: number;
@@ -20,20 +22,52 @@ interface Project {
     images: string[];
     email: string;
     // Add other properties specific to your project data
-  }
+}
 
-  const initialState = {
+const initialState = {
     message: '',
     errors: null,
-  };
-  
+};
 
 export default function UserType() {
     const { user, setUser, allProjects, getAllProjects } = useUser();
     const supabase = createClient();
     const router = useRouter();
     const [showProjects, setShowProjects] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);  // Start with loading true
+
+    React.useEffect(() => {
+        const checkUser = async () => {
+            if (user) {
+                try {
+                    const { data, error } = await supabase.from('users').select().eq('email', user.email).single();
+                    
+                    if (error) {
+                        console.error('Error fetching user:', error.message);
+                        router.replace('/login');
+                        return;
+                    }
+                    
+                    if (data) {
+                        if (data.role === 'Project Manager') {
+                            setLoading(false); // Stop loading if Project Manager
+                        } else if (data.role === 'Client') {
+                            router.replace('/client');
+                        } else if (data.role === 'Designer') {
+                            router.replace('/designer');
+                        }
+                    } else {
+                        console.log('No user data found');
+                    }
+                } catch (error) {
+                    // console.error('Error during user check:', error.message);
+                    router.replace('/login');
+                }
+            }
+        };
+
+        checkUser();
+    }, [user, router, supabase]);
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
@@ -43,16 +77,21 @@ export default function UserType() {
 
     const button_class = "bg-green-400 text-black hover:bg-fuchsia-400 border border-black";
 
-
     const handleViewProjects = async () => {
         setShowProjects(true);
-        // setShowCreateForm(false);
         setLoading(true);
         await getAllProjects();
         setLoading(false);
     };
 
-
+    if (loading) {
+        return (
+            <div className="flex flex-col items-center justify-center h-screen">
+                <img src="/GrayolaIcon.svg" alt="GrayolaIcon" className="w-40 h-40" />
+                <span>Loading...</span>
+            </div>
+        );
+    }
 
     return (
         <div>
@@ -61,8 +100,14 @@ export default function UserType() {
                     <MenubarMenu>
                         <MenubarTrigger onClick={handleViewProjects}>View All Projects</MenubarTrigger>
                     </MenubarMenu>
+                    <Link href={`/assign`}>
+                      <MenubarMenu>
+                          <MenubarTrigger>Assign</MenubarTrigger>
+                      </MenubarMenu>
+                    </Link>
                     
                 </Menubar>
+                
                 <Button onClick={handleLogout} className="ml-auto" variant="destructive">
                     Logout
                 </Button>
@@ -74,32 +119,26 @@ export default function UserType() {
                         <span className="text-4xl font-bold">Welcome</span>
                         <span className="text-lg mb-5">Click on a project to modify or assign it</span>
                         <Menubar>
-                          <MenubarMenu>
-                              <MenubarTrigger onClick={handleViewProjects}>View All Projects</MenubarTrigger>
-                          </MenubarMenu>
+                            <MenubarMenu>
+                                <MenubarTrigger onClick={handleViewProjects}>View All Projects</MenubarTrigger>
+                            </MenubarMenu>
                         </Menubar>
                     </div>
-                )
-                }
+                )}
                 {showProjects && (
                     <div className="mx-10 flex flex-wrap gap-2">
-                        {loading ? (
+                        {!allProjects || allProjects.length === 0 ? (
                             <div className="flex items-center justify-center h-full">
-                                <span>Loading...</span>
-                            </div>
-                        ) : !allProjects || allProjects.length === 0 ? (
-                            <div className=" flex items-center justify-center h-full">
                                 <img src="/GrayolaIcon.svg" alt="GrayolaIcon" className="w-40 h-40" />
                                 <h1>You don't have projects yet</h1>
                             </div>
                         ) : (
-                          allProjects && allProjects.map((project: Project) => (
-                              <ProjectCard key={`${project.id}-${project.title}`} {...project} />
+                            allProjects.map((project: Project) => (
+                                <ProjectCard key={`${project.id}-${project.title}`} {...project} />
                             ))
                         )}
                     </div>
                 )}
-                
             </main>
         </div>
     );

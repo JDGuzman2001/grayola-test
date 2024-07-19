@@ -19,6 +19,10 @@ interface UserContextType {
   allProjects: any;
   setAllProjects: (allProjects: any) => void;
   getAllProjects: () => void;
+  assignedProjects: any;
+  setAssignedProjects: (assignedProjects: any) => void;
+  designerProjects: any;
+  setDesignerProjects: (designerProjects: any) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -30,6 +34,9 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState<any>(null);
   const [allProjects, setAllProjects] = useState<any>(null);
+  const [assignedProjects, setAssignedProjects] = useState<any>(null);
+  const [designerProjects, setDesignerProjects] = useState<any>(null);
+  
  
 
   const supabase = createClient();
@@ -107,11 +114,15 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     setAllProjects(allProjects);
   }
 
+
+
+  
+
   
 
   return (
     <UserContext.Provider
-      value={{ user, setUser, loading, email, setEmail, password, setPassword, handleSignUp, handleSignIn, handleSignInWithGoogle, getProjects, projects, setProjects, allProjects, setAllProjects , getAllProjects}}
+      value={{ user, setUser, loading, email, setEmail, password, setPassword, handleSignUp, handleSignIn, handleSignInWithGoogle, getProjects, projects, setProjects, allProjects, setAllProjects , getAllProjects, assignedProjects, setAssignedProjects, designerProjects, setDesignerProjects}}
     >
       {children}
     </UserContext.Provider>

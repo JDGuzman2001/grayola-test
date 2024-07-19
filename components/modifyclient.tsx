@@ -21,6 +21,8 @@ import {
   } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useUser } from '@/context/UserContext/userContext';
+import { createClient } from "@/supabase/client";
 
 type ModifyClientProps = {
     data: {
@@ -40,9 +42,37 @@ const ModifyClient: React.FC<ModifyClientProps> = ({ data }) => {
     const handleEditClick = () => {
         setFormVisible(!isFormVisible);
     };
+    const { user, setUser, allProjects, getAllProjects } = useUser();
+    const supabase = createClient();
+    const [loading, setLoading] = useState(true);  // Start with loading true
+
+    React.useEffect(() => {
+        const checkUser = async () => {
+            if (user) {
+                console.log('User:', user);
+                console.log('User Email:', user.email);
+                const {data,  error} = await supabase.from('users').select().eq('email', user.email).single();
+  
+                if (data) {
+                    if (data.role === 'Project Manager') {
+                        setLoading(false); // Stop loading if Project Manager
+                    } else if (data.role === 'Client') {
+                        router.replace('/client');
+                    } else if (data.role === 'Designer') {
+                        router.replace('/designer');
+                    }
+                } else {
+                    console.log('No user data found');
+                }
+            }
+        };
+  
+        checkUser();
+    }, [user, router]);
 
     const handleDeleteClick = async () => {
         const result = await deleteProject(data.id);
+
 
         if (result.type === "success") {
             setDeleteStatus('Project deleted successfully');
@@ -53,6 +83,15 @@ const ModifyClient: React.FC<ModifyClientProps> = ({ data }) => {
             setDeleteStatus(result.message);
         }
     };
+
+    if (loading) {
+        return (
+            <div className="flex flex-col items-center justify-center h-screen">
+                <img src="/GrayolaIcon.svg" alt="GrayolaIcon" className="w-40 h-40" />
+                <span>Loading...</span>
+            </div>
+        );
+    }
 
     return (
         <div className="px-12 py-12 max-w-7xl mx-auto min-h-screen bg-cyan-200">
