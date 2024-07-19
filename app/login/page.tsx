@@ -29,6 +29,7 @@ export default function LoginPage() {
     <main className="h-screen flex flex-col items-center justify-center bg-cyan-200 p-6">
       <img src="/GrayolaIcon.svg" alt="GrayolaIcon" className="w-40 h-40" />
       <div className="bg-gray-200 p-6 rounded-lg shadow-md w-96">
+      {/* Functions to register and log in with email */}
         {/* <input
           type="email"
           name="email"
