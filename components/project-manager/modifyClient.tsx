@@ -86,7 +86,7 @@ const ModifyClient: React.FC<ModifyClientProps> = ({ data }) => {
     }
 
     return (
-        <div className="px-12 py-12 max-w-7xl mx-auto min-h-screen bg-cyan-200">
+        <div className="px-12 py-12 mx-auto min-h-screen bg-cyan-200">
             <div className="fixed top-0 left-0 w-full z-50 bg-white shadow-md flex justify-between items-center px-4 py-2">
                 <Link href={`/projects/${data.id}`}>
                     <div className="flex items-center">

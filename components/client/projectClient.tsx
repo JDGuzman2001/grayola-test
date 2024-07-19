@@ -51,7 +51,7 @@ type ProjectClientProps = {
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center h-screen">
+            <div className="flex flex-col items-center justify-center h-screen w-screen">
                 <img src="/GrayolaIcon.svg" alt="GrayolaIcon" className="w-40 h-40" />
                 <span>Loading...</span>
             </div>
@@ -59,21 +59,22 @@ type ProjectClientProps = {
     }
     
   return (
-    <div className="px-12 py-12 max-w-7xl mx-auto min-h-screen bg-cyan-200">
-        <div className="fixed top-0 left-0 w-full z-50 bg-white shadow-md flex justify-between items-center px-4 py-2 gap-64">
-                <Link href="/project-manager">
-                    <div className="flex items-center">
-                        <ChevronLeftIcon className="h-4 mr-2" />
-                        Back
-                    </div>
-                </Link>
+    <main className="px-12 py-12 mx-auto min-h-screen bg-cyan-200">
+        <div className="fixed top-0 left-0 w-full z-50 bg-white shadow-md flex justify-between items-center px-4 py-2">
+            <Link href="/project-manager">
+                <div className="flex items-center">
+                    <ChevronLeftIcon className="h-4 mr-2" />
+                    Back
+                </div>
+            </Link>
+            <div className="mx-auto">
                 <Link href={`/modify/${data.id}`}>
                     <Button>
                         Modify
                     </Button>
                 </Link>
-                
-                <LogoutButton />
+            </div>
+            <LogoutButton />
         </div>
         <Card key={data.id} className="w-full mb-4 mt-10">
             <CardHeader>
@@ -113,7 +114,7 @@ type ProjectClientProps = {
                 </div>
             </CardFooter>
         </Card>
-    </div>
+    </main>
     );
 };
 
