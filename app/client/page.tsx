@@ -10,27 +10,8 @@ import { useFormState } from 'react-dom';
 import Image from "next/image";
 import SubmitButton from '@/components/submit-button-project';
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuLabel,
-    DropdownMenuRadioGroup,
-    DropdownMenuRadioItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-  } from "@/components/ui/dropdown-menu";
-import {
     Menubar,
-    MenubarCheckboxItem,
-    MenubarContent,
-    MenubarItem,
     MenubarMenu,
-    MenubarRadioGroup,
-    MenubarRadioItem,
-    MenubarSeparator,
-    MenubarShortcut,
-    MenubarSub,
-    MenubarSubContent,
-    MenubarSubTrigger,
     MenubarTrigger,
   } from "@/components/ui/menubar"
 import {
@@ -43,15 +24,6 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-  } from "@/components/ui/select"
-import { set } from 'zod';
-import { get } from 'http';
 import { Textarea } from "@/components/ui/textarea"
 
 interface Project {
@@ -61,12 +33,12 @@ interface Project {
     state: string;
     images: string[];
     // Add other properties specific to your project data
-  }
+}
 
-  const initialState = {
+const initialState = {
     message: '',
     errors: null,
-  };
+};
   
 
 export default function UserType() {
@@ -80,6 +52,8 @@ export default function UserType() {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [email, setEmail] = useState("");
+
+
     const [state, formAction] = useFormState<any>(
         sendProject as any,
         initialState
@@ -132,6 +106,7 @@ export default function UserType() {
                     <div className="flex flex-col items-center justify-center">
                         <img src="/GrayolaIcon.svg" alt="GrayolaIcon" className="w-40 h-40" />
                         <span className="text-4xl font-bold">Welcome</span>
+                        <span className="text-lg">Create a project or review your previously created projects</span>
                     </div>
                 )
                 }
@@ -210,6 +185,11 @@ export default function UserType() {
                             <div className="flex items-center justify-center h-full">
                                 <span>Loading...</span>
                             </div>
+                        ) : !projects || projects.length === 0 ? (
+                            <div className=" flex items-center justify-center h-full">
+                                <img src="/GrayolaIcon.svg" alt="GrayolaIcon" className="w-40 h-40" />
+                                <h1>You don't have projects yet</h1>
+                            </div>
                         ) : (
                             projects && projects.map((project: Project) => (
                                 <Card key={project.id} className="w-[calc(33.33%-8px)] mb-4">
@@ -219,7 +199,7 @@ export default function UserType() {
                                     </CardHeader>
                                     <CardContent>
                                     {project.images && project.images[0] ? (
-                                        <div className="relative h-96 bg-center">
+                                        <div className="relative h-[200px] w-full bg-center">
                                             <Image
                                                 src={
                                                     project.images[0].startsWith('https') 
@@ -227,12 +207,9 @@ export default function UserType() {
                                                     : `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/storage/${project.images[0]}`
                                                 }
                                                 alt={project.title}
-                                                fill={true}
+                                                layout="fill"
+                                                objectFit="cover"
                                                 className="rounded-t"
-                                                sizes="100vw"
-                                                style={{
-                                                    objectFit: 'cover',
-                                                }}
                                             />
                                         </div>
                                     ) : <div className="flex flex-col items-center justify-center h-96">
@@ -240,22 +217,6 @@ export default function UserType() {
                                             <img src="/GrayolaIcon.svg" alt="GrayolaIcon" className="h-full w-full" />
                                         </div>
                                         }
-                                    {/* <div className="relative h-96 bg-center ">
-                                        <Image
-                                            src={
-                                                // project.images[0]
-                                                
-                                                project.images[0].startsWith('https') ? project.images[0]: `${process.env.SUPABASE_URL}/storage/v1/object/public/storage/${project.images[0]}`
-                                            }
-                                            alt={title}
-                                            fill={true}
-                                            className="rounded-t"
-                                            sizes="100vw"
-                                            style={{
-                                            objectFit: 'cover',
-                                            }}
-                                        />
-                                    </div> */}
                                     </CardContent>
                                     <CardFooter className="flex justify-center">
                                         <Button variant="outline" className="cursor-default hover:bg-white">Status: {project.state}</Button>

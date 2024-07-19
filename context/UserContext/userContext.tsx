@@ -16,6 +16,9 @@ interface UserContextType {
   getProjects: () => void;
   projects: any;
   setProjects: (projects: any) => void;
+  allProjects: any;
+  setAllProjects: (allProjects: any) => void;
+  getAllProjects: () => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -26,6 +29,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState<any>(null);
+  const [allProjects, setAllProjects] = useState<any>(null);
  
 
   const supabase = createClient();
@@ -80,7 +84,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       },
     });
 
-    console.log(res);
+    // console.log(res);
   };
 
   const getProjects = async () => {
@@ -89,13 +93,25 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       console.error('Error fetching projects:', error.message);
       return;
     }
-    console.log(projects);
+    // console.log(projects);
     setProjects(projects);
   }
 
+  const getAllProjects = async () => {
+    const { data: allProjects, error } = await supabase.from('projects').select();
+    if (error) {
+      console.error('Error fetching projects:', error.message);
+      return;
+    }
+    console.log(allProjects);
+    setAllProjects(allProjects);
+  }
+
+  
+
   return (
     <UserContext.Provider
-      value={{ user, setUser, loading, email, setEmail, password, setPassword, handleSignUp, handleSignIn, handleSignInWithGoogle, getProjects, projects, setProjects }}
+      value={{ user, setUser, loading, email, setEmail, password, setPassword, handleSignUp, handleSignIn, handleSignInWithGoogle, getProjects, projects, setProjects, allProjects, setAllProjects , getAllProjects}}
     >
       {children}
     </UserContext.Provider>
