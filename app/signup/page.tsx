@@ -43,8 +43,8 @@ const RegisterPage: React.FC = () => {
     React.useEffect(() => {
         const checkUser = async () => {
             if (user) {
-                console.log('User:', user);
-                console.log('User Email:', user.email);
+                // console.log('User:', user);
+                // console.log('User Email:', user.email);
                 const {data,  error} = await supabase.from('users').select().eq('email', user.email).single();
 
                 // if (error) {
@@ -61,7 +61,7 @@ const RegisterPage: React.FC = () => {
                         router.replace('/designer');
                       }
                 } else {
-                    console.log('No user data found');
+                    // console.log('No user data found');
                 }
             }
         };

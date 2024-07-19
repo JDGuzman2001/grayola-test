@@ -10,7 +10,7 @@ import { useUser } from '@/context/UserContext/userContext';
 
 export async function registerUserInformation(prevState: any, formData: FormData){
     const formEntries = Object.fromEntries(formData.entries());
-    console.log('Form Data:', formEntries);
+    // console.log('Form Data:', formEntries);
 
     const schema = z.object({
         email: z.string().min(1).email("This is not a valid Email address"),
@@ -58,7 +58,7 @@ export async function registerUserInformation(prevState: any, formData: FormData
             role})
 
             if (productsError){
-                console.log('Database Error:', productsError);
+                // console.log('Database Error:', productsError);
                 return {
                     type: "error",
                     message: 'Database Error: Failed to create item',
@@ -133,7 +133,7 @@ export async function sendProject(prevState: any, formData: FormData){
                 });
 
                 if (error) {
-                    console.error(error);
+                    // console.error(error);
                     throw new Error('Database Error: Failed to upload image');
                 }
 
@@ -150,13 +150,13 @@ export async function sendProject(prevState: any, formData: FormData){
             })
 
             if (productsError){
-                console.log('Database Error:', productsError);
+                // console.log('Database Error:', productsError);
                 return {
                     type: "error",
                     message: 'Database Error: Failed to create item',
                 }
             } else {
-                console.log('Project Created');
+                // console.log('Project Created');
             }
        
 
@@ -176,7 +176,7 @@ export async function sendProject(prevState: any, formData: FormData){
 
 export async function updateProject(prevState: any, formData: FormData){
     const formEntries = Object.fromEntries(formData.entries());
-    console.log('Form Data:', formEntries);
+    // console.log('Form Data:', formEntries);
 
 
     const schema = z.object({
@@ -225,7 +225,7 @@ export async function updateProject(prevState: any, formData: FormData){
                 });
 
                 if (error) {
-                    console.error(error);
+                    // console.error(error);
                     throw new Error('Database Error: Failed to upload image');
                 }
 
@@ -244,13 +244,13 @@ export async function updateProject(prevState: any, formData: FormData){
             .eq('id', id);
 
             if (projectsError){
-                console.log('Database Error:', projectsError);
+                // console.log('Database Error:', projectsError);
                 return {
                     type: "error",
                     message: 'Database Error: Failed to create item',
                 }
             } else {
-                console.log('Project Created');
+                // console.log('Project Created');
             }
        
 
@@ -267,7 +267,7 @@ export async function updateProject(prevState: any, formData: FormData){
 }
 
 export async function deleteProject(projectId: string) {
-    console.log('Project ID:', projectId);
+    // console.log('Project ID:', projectId);
     // Validar que el ID no esté vacío
     if (!projectId) {
         return {
@@ -286,21 +286,21 @@ export async function deleteProject(projectId: string) {
             .eq('id', projectId);
 
         if (error) {
-            console.error('Database Error:', error);
+            // console.error('Database Error:', error);
             return {
                 type: "error",
                 message: 'Database Error: Failed to delete project',
             };
         }
 
-        console.log('Project Deleted');
+        // console.log('Project Deleted');
         return {
             type: "success",
             message: 'Project deleted successfully',
         };
 
     } catch (error) {
-        console.error('Unexpected Error:', error);
+        // console.error('Unexpected Error:', error);
         return {
             type: "error",
             message: 'Failed to delete project',

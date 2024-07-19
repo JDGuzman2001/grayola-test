@@ -25,7 +25,7 @@ interface Project {
 }
 
 const initialState = {
-    message: '',
+    message: "",
     errors: null,
 };
 
@@ -43,7 +43,7 @@ export default function UserType() {
                     const { data, error } = await supabase.from('users').select().eq('email', user.email).single();
                     
                     if (error) {
-                        console.error('Error fetching user:', error.message);
+                        // console.error('Error fetching user:', error.message);
                         router.replace('/login');
                         return;
                     }
@@ -57,7 +57,7 @@ export default function UserType() {
                             router.replace('/designer');
                         }
                     } else {
-                        console.log('No user data found');
+                        // console.log('No user data found');
                     }
                 } catch (error) {
                     // console.error('Error during user check:', error.message);
@@ -130,7 +130,7 @@ export default function UserType() {
                         {!allProjects || allProjects.length === 0 ? (
                             <div className="flex items-center justify-center h-full">
                                 <img src="/GrayolaIcon.svg" alt="GrayolaIcon" className="w-40 h-40" />
-                                <h1>You don't have projects yet</h1>
+                                <h1>You dont have projects yet</h1>
                             </div>
                         ) : (
                             allProjects.map((project: Project) => (

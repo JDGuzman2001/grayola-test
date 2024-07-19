@@ -61,7 +61,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         emailRedirectTo: `${location.origin}/auth/callback`,
       },
     });
-    console.log(res);
+    // console.log(res);
     setUser(res?.data?.user);
     setEmail('');
     setPassword('');
@@ -72,7 +72,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       email,
       password,
     });
-    console.log(res);
+    // console.log(res);
     setUser(res?.data?.user);
     setEmail('');
     setPassword('');
@@ -97,7 +97,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const getProjects = async () => {
     const { data: projects, error } = await supabase.from('projects').select().filter('email', 'eq', user.email);
     if (error) {
-      console.error('Error fetching projects:', error.message);
+      // console.error('Error fetching projects:', error.message);
       return;
     }
     // console.log(projects);
@@ -107,10 +107,10 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const getAllProjects = async () => {
     const { data: allProjects, error } = await supabase.from('projects').select();
     if (error) {
-      console.error('Error fetching projects:', error.message);
+      // console.error('Error fetching projects:', error.message);
       return;
     }
-    console.log(allProjects);
+    // console.log(allProjects);
     setAllProjects(allProjects);
   }
 

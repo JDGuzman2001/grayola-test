@@ -21,7 +21,7 @@ const AssignClient: React.FC<{ designers: any[], projects: any[] }> = ({ designe
 //   };
     const handleAssign = async () => {
         if (!assignedProjects || !designerProjects) {
-        console.error('No project or designer selected');
+        // console.error('No project or designer selected');
         return;
         }
 
@@ -30,8 +30,8 @@ const AssignClient: React.FC<{ designers: any[], projects: any[] }> = ({ designe
         const { id: projectId } = assignedProjects;
         const { id: designerId } = designerProjects;
 
-        console.log('Project ID:', projectId);
-        console.log('Designer ID:', designerId);
+        // console.log('Project ID:', projectId);
+        // console.log('Designer ID:', designerId);
 
         const { error } = await supabase
         .from('projects')
@@ -39,9 +39,9 @@ const AssignClient: React.FC<{ designers: any[], projects: any[] }> = ({ designe
         .eq('id', projectId);
 
         if (error) {
-        console.error('Error updating project:', error.message);
+        // console.error('Error updating project:', error.message);
         } else {
-        console.log('Project updated successfully');
+        // console.log('Project updated successfully');
         router.replace('/project-manager');
         }
     };
