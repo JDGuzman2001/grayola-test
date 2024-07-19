@@ -1,6 +1,7 @@
 # Grayola Test
 ## Descripción
 Este proyecto es una aplicación web desarrollada con Next.js y Supabase. Permite a los usuarios registrarse o iniciar sesión con Google y define automáticamente un rol (Cliente, Diseñador o Project Manager) durante el registro. Cada rol tiene diferentes vistas y funcionalidades dentro de la aplicación.
+Miralo en 
 ## Características
 - Autenticación de usuarios (registro e inicio de sesión con Google)
 - Definición de roles: Cliente, Diseñador y Project Manager
@@ -140,3 +141,5 @@ yarn dev
 ├── tailwind,config.ts
 └── tsconfig.json
 ```
+## Demo
+Puedes ver una demo en funcionamiento de la aplicación en el siguiente enlace: [Demo](https://grayola-test-ee72.vercel.app/)  en Vercel
