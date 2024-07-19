@@ -1,4 +1,4 @@
-"use client"; // Esto es importante para indicar que este es un componente del lado del cliente
+"use client"; 
 
 import { useRouter } from 'next/navigation';
 import { createClient } from "@/supabase/client";

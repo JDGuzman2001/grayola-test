@@ -1,26 +1,13 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Pencil1Icon, ChevronLeftIcon, TrashIcon } from "@radix-ui/react-icons";
+import { ChevronLeftIcon} from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
-import UpdateInfo from "@/components/updateinfo";
 import Link from 'next/link';
-import LogoutButton from "@/components/logoutbutton";
+import LogoutButton from "@/components/logoutButton";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from 'next/image';
-import { deleteProject } from '@/actions/index';
 import { useRouter } from 'next/navigation';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-  } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useUser } from '@/context/UserContext/userContext';
 import { createClient } from "@/supabase/client";
 
@@ -39,27 +26,23 @@ type ProjectClientProps = {
     
     const supabase = createClient();
     const router = useRouter();
-    const { user, setUser, allProjects, getAllProjects } = useUser();
-    const [loading, setLoading] = useState(true);  // Start with loading true
+    const { user } = useUser();
+    const [loading, setLoading] = useState(true); 
 
     React.useEffect(() => {
         const checkUser = async () => {
             if (user) {
-                // console.log('User:', user);
-                // console.log('User Email:', user.email);
                 const {data,  error} = await supabase.from('users').select().eq('email', user.email).single();
   
                 if (data) {
                     if (data.role === 'Project Manager') {
-                        setLoading(false);
+                        router.replace('/project-manager');
                     } else if (data.role === 'Client') {
                         router.replace('/client');
                     } else if (data.role === 'Designer') {
-                        router.replace('/designer');
+                        setLoading(false);
                     }
-                } else {
-                    // console.log('No user data found');
-                }
+                } 
             }
         };
   
@@ -75,21 +58,14 @@ type ProjectClientProps = {
         );
     }
     
-
-
   return (
     <div className="px-12 py-12 max-w-7xl mx-auto min-h-screen bg-cyan-200">
         <div className="fixed top-0 left-0 w-full z-50 bg-white shadow-md flex justify-between items-center px-4 py-2 gap-64">
-                <Link href="/project-manager">
+                <Link href="/designer">
                     <div className="flex items-center">
                         <ChevronLeftIcon className="h-4 mr-2" />
                         Back
                     </div>
-                </Link>
-                <Link href={`/modify/${data.id}`}>
-                    <Button>
-                        Modify
-                    </Button>
                 </Link>
                 
                 <LogoutButton />

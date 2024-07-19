@@ -1,32 +1,25 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import { createClient } from '@/supabase/client';
-import { useUser } from '@/context/UserContext/userContext';
 
-
+/**
+ * Registers user information by validating form data and inserting it into the "users" table in Supabase.
+ * Redirects to the loading page upon success or returns an error message upon failure.
+ */
 export async function registerUserInformation(prevState: any, formData: FormData){
     const formEntries = Object.fromEntries(formData.entries());
-    // console.log('Form Data:', formEntries);
-
     const schema = z.object({
         email: z.string().min(1).email("This is not a valid Email address"),
-        // password: z.string().min(5),
         name: z.string().min(4),
-        phone: z.string().min(1),
-        borndate: z.string().min(1),
         role: z.string().min(1),
     });
 
     const validateFields = schema.safeParse({
         email: formData.get('email'),
-        // password: formData.get('password'),
         name: formData.get('name'),
-        phone: formData.get('phone'),
-        borndate: formData.get('borndate'),
         role: formData.get('role'),
 
     });
@@ -40,10 +33,7 @@ export async function registerUserInformation(prevState: any, formData: FormData
 
     const {
         email,
-        //password,
         name,
-        phone,
-        borndate,
         role,
     } = validateFields.data;
 
@@ -51,30 +41,21 @@ export async function registerUserInformation(prevState: any, formData: FormData
         const supabase = createClient();
         const { error: productsError } = await supabase.from("users").insert({
             email, 
-            //password, 
             name, 
-            phone, 
-            borndate, 
             role})
 
             if (productsError){
-                // console.log('Database Error:', productsError);
                 return {
                     type: "error",
                     message: 'Database Error: Failed to create item',
                 }
             }
-       
-
-
     } catch (error) {
         return {
             type: "error",
             message: 'Failed to create item',
         }
     }
-
-    // revalidatePath('/');
     redirect('/loading');
 }
 
@@ -86,9 +67,14 @@ const ACCEPTED_IMAGE_TYPES = [
   'image/webp',
 ];
 
+/**
+ * Sends a project by validating form data and inserting it into the "projects" table in Supabase.
+ * Uploads any provided images to Supabase storage and associates their paths with the project.
+ * Redirects to the loading page upon success or returns an error message upon failure.
+ */
 export async function sendProject(prevState: any, formData: FormData){
     const formEntries = Object.fromEntries(formData.entries());
-
+    console.log(formEntries);
 
     const schema = z.object({
         title: z.string().min(1),
@@ -102,8 +88,6 @@ export async function sendProject(prevState: any, formData: FormData){
         description: formData.get('description'),
         images: formData.getAll('images').length ? formData.getAll('images') : [''],
         email: formData.get('email'),
-
-
     });
     if (!validateFields.success){
         return{
@@ -124,7 +108,6 @@ export async function sendProject(prevState: any, formData: FormData){
     try {
         const supabase = createClient();
         let imagePaths: string[] = [];
-        // if (images?.length) {
         if (images && images.length > 0 && images[0].name !== 'undefined') {
             imagePaths = await Promise.all(images.map(async (image) => {
                 const fileName = `${Math.random()}-${image.name}`;
@@ -133,14 +116,11 @@ export async function sendProject(prevState: any, formData: FormData){
                 });
 
                 if (error) {
-                    // console.error(error);
                     throw new Error('Database Error: Failed to upload image');
                 }
-
                 return data.path;
             }));
         } 
-        
         const { error: productsError } = await supabase.from("projects").insert({
             title, 
             description, 
@@ -150,41 +130,34 @@ export async function sendProject(prevState: any, formData: FormData){
             })
 
             if (productsError){
-                // console.log('Database Error:', productsError);
                 return {
                     type: "error",
                     message: 'Database Error: Failed to create item',
                 }
-            } else {
-                // console.log('Project Created');
-            }
-       
-
-
+            } 
     } catch (error) {
         return {
             type: "error",
             message: 'Failed to create item',
         }
     }
-
-    // revalidatePath('/client');
     redirect('/loading');
 }
 
 
-
+/**
+ * Updates an existing project by validating form data and updating the "projects" table in Supabase.
+ * Uploads any new images to Supabase storage and associates their paths with the project.
+ * Revalidates and redirects to the modified project page upon success or returns an error message upon failure.
+ */
 export async function updateProject(prevState: any, formData: FormData){
     const formEntries = Object.fromEntries(formData.entries());
-    // console.log('Form Data:', formEntries);
-
 
     const schema = z.object({
         id: z.string().min(1),
         title: z.string().min(1),
         description: z.string().min(4),
         images: z.array(z.any()).optional(),
-        // email: z.string().min(1).email("This is not a valid Email address"),
     });
 
     const validateFields = schema.safeParse({
@@ -192,9 +165,6 @@ export async function updateProject(prevState: any, formData: FormData){
         title: formData.get('title'),
         description: formData.get('description'),
         images: formData.getAll('images').length ? formData.getAll('images') : [''],
-        // email: formData.get('email'),
-
-
     });
     if (!validateFields.success){
         return{
@@ -209,14 +179,11 @@ export async function updateProject(prevState: any, formData: FormData){
         title,
         description,
         images,
-        // email
-
     } = validateFields.data;
 
     try {
         const supabase = createClient();
         let imagePaths: string[] = [];
-        // if (images?.length) {
         if (images && images.length > 0 && images[0].name !== 'undefined') {
             imagePaths = await Promise.all(images.map(async (image) => {
                 const fileName = `${Math.random()}-${image.name}`;
@@ -225,10 +192,8 @@ export async function updateProject(prevState: any, formData: FormData){
                 });
 
                 if (error) {
-                    // console.error(error);
                     throw new Error('Database Error: Failed to upload image');
                 }
-
                 return data.path;
             }));
         } 
@@ -238,37 +203,28 @@ export async function updateProject(prevState: any, formData: FormData){
             .update({
                 title,
                 description,
-                images: imagePaths.length ? imagePaths : undefined, // Update images only if there are new images
-                // email,
+                images: imagePaths.length ? imagePaths : undefined,
             })
             .eq('id', id);
 
             if (projectsError){
-                // console.log('Database Error:', projectsError);
                 return {
                     type: "error",
                     message: 'Database Error: Failed to create item',
                 }
             } else {
-                // console.log('Project Created');
+                revalidatePath('/modify/'+id);
+                redirect('/modify/'+id);
             }
-       
-
-
     } catch (error) {
         return {
             type: "error",
             message: 'Failed to create item',
         }
     }
-
-    revalidatePath('/modify/'+id);
-    redirect('/modify/'+id);
 }
 
 export async function deleteProject(projectId: string) {
-    // console.log('Project ID:', projectId);
-    // Validar que el ID no esté vacío
     if (!projectId) {
         return {
             type: "error",
@@ -279,28 +235,23 @@ export async function deleteProject(projectId: string) {
     try {
         const supabase = createClient();
 
-        // Eliminar el proyecto de la base de datos
         const { error } = await supabase
             .from("projects")
             .delete()
             .eq('id', projectId);
 
         if (error) {
-            // console.error('Database Error:', error);
             return {
                 type: "error",
                 message: 'Database Error: Failed to delete project',
             };
         }
-
-        // console.log('Project Deleted');
         return {
             type: "success",
             message: 'Project deleted successfully',
         };
 
     } catch (error) {
-        // console.error('Unexpected Error:', error);
         return {
             type: "error",
             message: 'Failed to delete project',

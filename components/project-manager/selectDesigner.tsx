@@ -36,7 +36,7 @@ const DesignerSelect: React.FC<{ designers?: DesignerProps[] }> = ({ designers =
   const handleSelectChange = (value: string) => {
     const designer = designers.find(d => d.id.toString() === value);
     setSelectedDesigner(designer || null);
-    setDesignerProjects(designer || null); // Actualiza designerProjects en el contexto
+    setDesignerProjects(designer || null);
   };
 
   return (
@@ -48,7 +48,6 @@ const DesignerSelect: React.FC<{ designers?: DesignerProps[] }> = ({ designers =
             </SelectTrigger>
             <SelectContent>
             <SelectGroup>
-                {/* <SelectLabel>Projects</SelectLabel> */}
                 {designers.map(designer => (
                 <SelectItem key={designer.id} value={designer.id.toString()}>{designer.name}</SelectItem>
                 ))}
@@ -74,7 +73,6 @@ const DesignerSelect: React.FC<{ designers?: DesignerProps[] }> = ({ designers =
       {selectedDesigner && (
         <Card key={selectedDesigner.id} className="w-[300px] h-[600px] mb-10">
           <CardHeader>
-            {/* <CardTitle>{selectedProject.id}</CardTitle> */}
             <CardTitle>{selectedDesigner.name}</CardTitle>
             <CardDescription>{selectedDesigner.email}</CardDescription>
             <CardDescription>{selectedDesigner.phone}</CardDescription>

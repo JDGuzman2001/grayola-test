@@ -1,7 +1,7 @@
 import { createClient } from "@/supabase/client";
-import AssignClient from "@/components/assignclient";
+import AssignClient from "@/components/project-manager/assignClient";
 
-export const revalidate = 1;
+export const revalidate = 10;
 
 export default async function Assign() {
   const supabase = createClient();
@@ -10,12 +10,8 @@ export default async function Assign() {
   const { data: projects, error: projectsError } = await supabase.from('projects').select().eq('state', 'Pending');
 
   if (designersError || projectsError) {
-    // console.error('Error fetching data:', designersError || projectsError);
     return <p>Error loading data</p>;
   }
-
-//   console.log('Designers:', designers);
-//   console.log('Projects:', projects);
 
   return (
     <AssignClient designers={designers || []} projects={projects || []} />

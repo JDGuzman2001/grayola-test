@@ -1,9 +1,8 @@
 import { createClient } from "@/supabase/client";
-import ProjectClient  from "@/components/designerprojectclient";
+import ProjectClient  from "@/components/client/projectClient";
 
 type Props = {
-  params: { slug: string };
-//   searchParams: { [key: string]: string | string[] | undefined };
+  params: { id: string };
 };
 
 
@@ -12,22 +11,17 @@ export async function generateStaticParams() {
     const { data: products, error } = await supabase.from('projects').select();
 
     if (error) {
-    // console.error('Error fetching products:', error);
-    return [];
+      return [];
     }
-
-    // console.log('Products:', products);
 
     if (!products) {
-    return [];
+      return [];
     }
 
-    // Mapea los IDs directamente
     const productIds = products.map(item => item.id);
-    // console.log('Product IDs:', productIds);
 
     return products.map(({ id }) => ({
-    slug: id.toString(),
+      id: id.toString(),
     }));
 }
 
@@ -36,7 +30,7 @@ export default async function Project({ params }: Props) {
   const { data } = await supabase
     .from('projects')
     .select()
-    .match({ id: params.slug })
+    .match({ id: params.id })
     .single();
 
     if (!data) {

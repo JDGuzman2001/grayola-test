@@ -11,8 +11,9 @@ import {
     MenubarMenu,
     MenubarTrigger,
 } from "@/components/ui/menubar";
-import ProjectCard from "@/components/project-card";
+import ProjectCard from "@/components/projectCard";
 import Link from 'next/link';
+
 
 interface Project {
     id: number;
@@ -21,7 +22,6 @@ interface Project {
     state: string;
     images: string[];
     email: string;
-    // Add other properties specific to your project data
 }
 
 const initialState = {
@@ -34,33 +34,28 @@ export default function UserType() {
     const supabase = createClient();
     const router = useRouter();
     const [showProjects, setShowProjects] = useState(false);
-    const [loading, setLoading] = useState(true);  // Start with loading true
+    const [loading, setLoading] = useState(true);
 
     React.useEffect(() => {
         const checkUser = async () => {
             if (user) {
                 try {
-                    const { data, error } = await supabase.from('users').select().eq('email', user.email).single();
-                    
+                    const { data, error } = await supabase.from('users').select().eq('email', user.email).single(); 
                     if (error) {
-                        // console.error('Error fetching user:', error.message);
                         router.replace('/login');
                         return;
                     }
                     
                     if (data) {
                         if (data.role === 'Project Manager') {
-                            setLoading(false); // Stop loading if Project Manager
+                            setLoading(false); 
                         } else if (data.role === 'Client') {
                             router.replace('/client');
                         } else if (data.role === 'Designer') {
                             router.replace('/designer');
                         }
-                    } else {
-                        // console.log('No user data found');
-                    }
+                    } 
                 } catch (error) {
-                    // console.error('Error during user check:', error.message);
                     router.replace('/login');
                 }
             }

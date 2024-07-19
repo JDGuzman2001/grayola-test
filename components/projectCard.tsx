@@ -21,7 +21,7 @@ interface ProjectProps {
     email: string;
   }
 
-  const MAX_DESCRIPTION_LENGTH = 150; // Ajusta según tus necesidades
+  const MAX_DESCRIPTION_LENGTH = 150;
 
   const truncateDescription = (description: string) => {
       if (description.length <= MAX_DESCRIPTION_LENGTH) {

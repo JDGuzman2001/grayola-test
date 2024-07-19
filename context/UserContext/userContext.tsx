@@ -19,6 +19,9 @@ interface UserContextType {
   allProjects: any;
   setAllProjects: (allProjects: any) => void;
   getAllProjects: () => void;
+  getUnassignedProjects: () => void;
+  unassignedProjects: any;
+  setUnassignedProjects: (unassignedProjects: any) => void;
   assignedProjects: any;
   setAssignedProjects: (assignedProjects: any) => void;
   designerProjects: any;
@@ -36,7 +39,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [allProjects, setAllProjects] = useState<any>(null);
   const [assignedProjects, setAssignedProjects] = useState<any>(null);
   const [designerProjects, setDesignerProjects] = useState<any>(null);
-  
+  const [unassignedProjects, setUnassignedProjects] = useState<any>(null);
  
 
   const supabase = createClient();
@@ -53,6 +56,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     getUser();
   }, [supabase]);
 
+  // Handles user registration.
   const handleSignUp = async () => {
     const res = await supabase.auth.signUp({
       email,
@@ -61,24 +65,23 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         emailRedirectTo: `${location.origin}/auth/callback`,
       },
     });
-    // console.log(res);
     setUser(res?.data?.user);
     setEmail('');
     setPassword('');
   };
 
+  // Handles user login with email and password.
   const handleSignIn = async () => {
     const res = await supabase.auth.signInWithPassword({
       email,
       password,
     });
-    // console.log(res);
     setUser(res?.data?.user);
     setEmail('');
     setPassword('');
   };
 
-
+  // Handle login with Google.
   const handleSignInWithGoogle = async () => {
     const res = await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -90,39 +93,38 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         redirectTo: `https://grayola-test.vercel.app/loading`,
       },
     });
-
-    // console.log(res);
   };
 
+  // Gets the authenticated user's projects.
   const getProjects = async () => {
     const { data: projects, error } = await supabase.from('projects').select().filter('email', 'eq', user.email);
     if (error) {
-      // console.error('Error fetching projects:', error.message);
       return;
     }
-    // console.log(projects);
     setProjects(projects);
   }
 
+  // Gets all projects.
   const getAllProjects = async () => {
     const { data: allProjects, error } = await supabase.from('projects').select();
     if (error) {
-      // console.error('Error fetching projects:', error.message);
       return;
     }
-    // console.log(allProjects);
     setAllProjects(allProjects);
   }
 
-
-
-  
-
-  
+  // Gets unassigned projects.
+  const getUnassignedProjects = async () => {
+    const { data: unassignedProjects, error } = await supabase.from('projects').select().eq('state', 'Pending');
+    if (error) {
+      return;
+    }
+    setUnassignedProjects(unassignedProjects);
+  }
 
   return (
     <UserContext.Provider
-      value={{ user, setUser, loading, email, setEmail, password, setPassword, handleSignUp, handleSignIn, handleSignInWithGoogle, getProjects, projects, setProjects, allProjects, setAllProjects , getAllProjects, assignedProjects, setAssignedProjects, designerProjects, setDesignerProjects}}
+      value={{ user, setUser, loading, email, setEmail, password, setPassword, handleSignUp, handleSignIn, handleSignInWithGoogle, getProjects, projects, setProjects, allProjects, setAllProjects , getAllProjects, assignedProjects, setAssignedProjects, designerProjects, setDesignerProjects, getUnassignedProjects, unassignedProjects, setUnassignedProjects }}
     >
       {children}
     </UserContext.Provider>
