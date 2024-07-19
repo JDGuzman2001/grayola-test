@@ -87,7 +87,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
           access_type: "offline",
           prompt: "consent",
         },
-        redirectTo: `${location.origin}/loading`,
+        redirectTo: `https://grayola-test.vercel.app/loading`,
       },
     });
 
