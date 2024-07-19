@@ -1,44 +1,89 @@
 "use client";
-
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
+import * as React from "react";
+import { useEffect, useState } from "react";
+import { useUser } from "@/context/UserContext/userContext"; // Ajusta la ruta si es necesario
+import DesignerClient from "@/components/designerclient";
 import { createClient } from "@/supabase/client";
-import {useRouter} from "next/navigation";
-import {useEffect, useState} from "react";
-import { useUser } from '@/context/UserContext/userContext';
- 
+import { useRouter } from "next/navigation";
 
-export default function UserType() {
-  const { email, setUser, setEmail, password, setPassword, user, loading, handleSignUp, handleSignIn } = useUser();
+export default function Designer() {
+  const [designerProjects, setDesignerProjects] = useState<any>([]);
+  const [loadingPage, setLoadingPage] = useState(true);
+  const { user, setUser, projects, getProjects } = useUser();
   const supabase = createClient();
-  const button_class = "bg-green-400 text-black hover:bg-fuchsia-400 border border-black"
   const router = useRouter();
+  React.useEffect(() => {
+    const checkUser = async () => {
+        if (user) {
+            try {
+                const { data, error } = await supabase.from('users').select().eq('email', user.email).single();
+                
+                if (error) {
+                    console.error('Error fetching user:', error.message);
+                    router.replace('/login');
+                    return;
+                }
+                
+                if (data) {
+                    if (data.role === 'Project Manager') {
+                        router.replace('/project-manager');
+                    } else if (data.role === 'Client') {
+                        router.replace('/client');// Stop loading if Clien
+                    } else if (data.role === 'Designer') {
+                        setLoadingPage(false);
+                    }
+                } else {
+                    console.log('No user data found');
+                }
+            } catch (error) {
+                // console.error('Error during user check:', error.message);
+                router.replace('/login');
+            }
+        }
+    };
 
+    checkUser();
+}, [user, router, supabase]);
+  useEffect(() => {
+    if (user) {
+      const fetchProjects = async () => {
+        try {
+          const supabase = createClient();
+          const { data: userdata, error: userdataError } = await supabase
+            .from('users')
+            .select()
+            .eq('email', user.email)
+            .single();
+            
+          if (userdataError) throw userdataError;
 
-  const handleLogout = async () => {
-    const {error} = await supabase.auth.signOut();
-    setUser(null);
-    router.refresh();
-    router.push('/login');
-  };
+          const { data: projectsData, error: projectsError } = await supabase
+            .from('projects')
+            .select()
+            .eq('designer', userdata.id);
+          
+          if (projectsError) throw projectsError;
 
-  return (    
-    <main className="flex flex-col items-center justify-center min-h-screen bg-cyan-200">
-      <img src="/GrayolaIcon.svg" alt="GrayolaIcon" className="w-40 h-40" />
-      <div className="flex space-x-4">
-        {/* <Button className={button_class}>Cliente</Button> */}
-        {/* <Button className={button_class}>Project Manager</Button> */}
-        <Button className={button_class}>Diseñador</Button>
-      </div>
-      <footer className="">
-      <Button
-        onClick={handleLogout}
-        variant="destructive"
-        className="mt-24"
-        >
-        Logout
-      </Button>
-      </footer>
-    </main>
+          setDesignerProjects(projectsData || []);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+
+      fetchProjects();
+    }
+  }, [user]);
+
+  if (loadingPage) {
+    return (
+        <div className="flex flex-col items-center justify-center h-screen">
+            <img src="/GrayolaIcon.svg" alt="GrayolaIcon" className="w-40 h-40" />
+            <span>Loading...</span>
+        </div>
+    );
+}
+
+  return (
+    <DesignerClient projects={designerProjects} />
   );
 }

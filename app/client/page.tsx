@@ -48,7 +48,7 @@ export default function UserType() {
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [showProjects, setShowProjects] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [loadingPage, setLoadingPage] = useState(false);
+    const [loadingPage, setLoadingPage] = useState(true);
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
