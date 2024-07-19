@@ -33,15 +33,16 @@ yarn install
 ```
 Este comando instalará todas las dependencias listadas en el archivo package.json, incluyendo shadcn y otros paquetes necesarios.
 ## Configuración
-1. Crea un archivo .env.local en la raíz del proyecto y añade las siguientes variables de entorno:
+### 1. Crea un archivo .env.local en la raíz del proyecto y añade las siguientes variables de entorno:
 env
 ```
 NEXT_PUBLIC_SUPABASE_URL=tu_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_supabase_anon_key
 ```
-2. Configura tu instancia de Supabase:
-Ve a Supabase y crea un proyecto.
-En la configuración del proyecto, obtén la URL y la clave anónima y añádelas a tu archivo .env.local.
+### 2. Configura tu instancia de Supabase:
+   [Supabase Documentation](https://supabase.com/docs/guides/getting-started/quickstarts/nextjs)
+1. Ve a Supabase y crea un proyecto.
+2. En la configuración del proyecto, obtén la URL y la clave anónima y añádelas a tu archivo .env.local.
 ## Uso
 1. Inicia el servidor de desarrollo:
 ```
@@ -100,20 +101,23 @@ yarn dev
 │   │   ├── progress.tsx
 │   │   ├── select.tsx
 │   │   └── textarea.tsx
-│   ├── assignclient.tsx
-│   ├── designer-card.tsx
-│   ├── designerclient.tsx
-│   ├── designerprojectclient.tsx
-│   ├── logoutbutton.tsx
-│   ├── modifyclient.tsx
-│   ├── project-card.tsx
-│   ├── projectclient.tsx
-│   ├── selectdesigner.tsx
-│   ├── selectproject.tsx
-│   ├── submit-button-project.tsx
-│   ├── submit-button-update.tsx
-│   ├── submit-button.tsx
-│   └── updateinfo.tsx
+│   ├── client/
+│   │   ├── projectClient.tsx
+│   │   └── submitButtonProject.tsx
+│   ├── designer/
+│   │   ├── designerCard.tsx
+│   │   ├── designerClient.tsx
+│   │   └── designerProjectClient.tsx
+│   ├── project-manager/
+│   │   ├── assignClient.tsx
+│   │   ├── modifyClient.tsx
+│   │   ├── selectDesigner.tsx
+│   │   ├── selectProject.tsx
+│   │   ├── submitButtonUpdate.tsx
+│   │   └── updateInfo.tsx
+│   ├── logoutButton.tsx
+│   ├── projectCard.tsx
+│   ├── submitButton.tsx
 ├── context/
 │   └── UserContex/
 │       └── userContext.tsx
@@ -141,4 +145,4 @@ yarn dev
 └── tsconfig.json
 ```
 ## Demo
-Puedes ver una demo en funcionamiento de la aplicación en el siguiente enlace: [Demo](https://grayola-test-2.vercel.app/)  en Vercel
+Puedes ver una demo en funcionamiento de la aplicación en el siguiente enlace: [Demo](https://grayolatest-jdguzman2001s-projects.vercel.app/)  en Vercel
